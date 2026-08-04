@@ -21,7 +21,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
         DISABLED,
         IDLE,
         HOMING,
-        GO_TO_HEIGHT,
+        GO_TO_POSITION,
         MANUAL
     }
 
@@ -37,7 +37,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
 
     private static Elevator instance;
 
-    private final Motor motor;
+    private final Motor heightMotor;
     private final HallEffect hallEffect = new HallEffect(
             "Elevator/HallEffect",
             new HallEffectConfig(HALL_EFFECT_CHANNEL)
@@ -47,6 +47,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     private final Elevator2d setpoint2d = new Elevator2d("Elevator/Setpoint2d", new Color8Bit(100, 100, 100));
 
     private double targetHeight_m = MIN_HEIGHT_m;
+    
     private double voltsTarget = 0.0;
     private boolean hallDetected = false;
     private boolean zeroed = false;
@@ -62,9 +63,9 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     private Elevator() {
         super("Elevator");
 
-        MotorConfig config = new MotorConfig(MOTOR_ID)
+        MotorConfig heightConfig = new MotorConfig(HEIGHT_MOTOR_ID)
                 .withCanbus(CANBUS)
-                .withFollower(FOLLOWER_ID, FOLLOWER_OPPOSE)
+                .withFollower(HEIGHT_FOLLOWER_ID, FOLLOWER_OPPOSE)
                 .withInverted(INVERTED)
                 .withBrake(BRAKE)
                 .withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_A)
@@ -73,15 +74,19 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
                 .withPIDGains(kP, kI, kD, GRAVITY)
                 .withMotionMagic(MM_CRUISE_VELOCITY, MM_ACCELERATION, MM_JERK)
                 .withSim(SIM_MOTOR, METERS_TO_ROTATIONS, SIM_MOI);
+        
+       
 
-        motor = new Motor("Elevator/Motor", config);
+        heightMotor = new Motor("Elevator/HeightMotor", heightConfig);
+    
+
 
         setCommand(Command.IDLE);
     }
 
     @Override
     protected void inputPeriodic() {
-        motor.readInputs();
+        heightMotor.readInputs();
         hallEffect.readInputs();
         hallDetected = hallEffect.get();
     }
@@ -90,11 +95,10 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     protected void handle() {
         switch (getCommand()) {
             case DISABLED:
-                motor.stop();
+                heightMotor.stop();
                 break;
-
             case IDLE:
-                motor.setVoltage(0.0);
+                heightMotor.setVoltage(0.0);
                 break;
 
             case HOMING:
@@ -103,9 +107,10 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
                 }
                 switch ((Homing) getSubstate()) {
                     case SEEKING:
-                        motor.setVoltage(HOMING_VOLTS);
+                        heightMotor.setVoltage(HOMING_VOLTS);
                         if (Robot.isSimulation() || hallDetected) {
-                            motor.zeroPosition(MIN_HEIGHT_m);
+                            heightMotor.zeroPosition(MIN_HEIGHT_m);
+                            
                             zeroed = true;
                             setSubstate(Homing.SETTLED);   
                         }
@@ -116,20 +121,20 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
                 }
                 break;
 
-            case GO_TO_HEIGHT:
+            case GO_TO_POSITION:
                 if (firstLoop()) {
                     setSubstate(Travel.MOVING);
                 }
                 switch ((Travel) getSubstate()) {
                     case MOVING:
-                        motor.setMotionMagic(targetHeight_m);
-                        if (atTarget(TOLERANCE_m)) {
+                        heightMotor.setMotionMagic(targetHeight_m);
+                        if (atTargetHeight(TOLERANCE_m)) {
                             setSubstate(Travel.HOLDING);   
                         }
                         break;
                     case HOLDING:
-                        motor.setMotionMagic(targetHeight_m);
-                        if (!atTarget(TOLERANCE_m)) {
+                        heightMotor.setMotionMagic(targetHeight_m);
+                        if (!atTargetHeight(TOLERANCE_m)) {
                             setSubstate(Travel.MOVING);    
                         }
                         break;
@@ -137,7 +142,8 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
                 break;
 
             case MANUAL:
-                motor.setVoltage(voltsTarget);
+                heightMotor.setVoltage(voltsTarget);
+                
                 break;
         }
     }
@@ -150,7 +156,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
         setpoint2d.periodic();
 
         Logger.recordOutput("Elevator/Height_m", getHeight());
-        Logger.recordOutput("Elevator/Velocity_mps", motor.getVelocity());
+        Logger.recordOutput("Elevator/Velocity_mps", heightMotor.getVelocity());
         Logger.recordOutput("Elevator/TargetHeight_m", targetHeight_m);
         Logger.recordOutput("Elevator/Zeroed", isZeroed());
     }
@@ -166,8 +172,9 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
 
     public void trackToHeight(double height_m) {
         targetHeight_m = MathUtil.clamp(height_m, MIN_HEIGHT_m, MAX_HEIGHT_m);
-        setCommand(Command.GO_TO_HEIGHT);
+        setCommand(Command.GO_TO_POSITION);
     }
+
 
     public void manual(double volts) {
         voltsTarget = volts;
@@ -175,14 +182,15 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     }
 
     public double getHeight() {
-        return motor.getPosition();
+        return heightMotor.getPosition();
     }
 
     public double getTargetHeight() {
         return targetHeight_m;
     }
 
-    public boolean atTarget(double tol) {
+
+    public boolean atTargetHeight(double tol) {
         return Util.inRange(targetHeight_m - getHeight(), tol);
     }
 

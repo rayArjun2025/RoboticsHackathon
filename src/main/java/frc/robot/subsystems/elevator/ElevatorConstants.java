@@ -12,8 +12,10 @@ public final class ElevatorConstants {
 
     private ElevatorConstants() {}
 
-    public static final int MOTOR_ID = 15;
-    public static final int FOLLOWER_ID = 16;
+    public static final int HEIGHT_MOTOR_ID = 15;
+    
+    public static final int HEIGHT_FOLLOWER_ID = 16;
+    
     public static final MotorAlignmentValue FOLLOWER_OPPOSE = MotorAlignmentValue.Opposed;
     public static final String CANBUS = TunerConstants.kCANBus.getName();
     public static final int HALL_EFFECT_CHANNEL = 0;
@@ -52,4 +54,5 @@ public final class ElevatorConstants {
     public static final double METERS_TO_ROTATIONS = (MAX_HEIGHT_R - MIN_HEIGHT_R) / STROKE_m;
 
     public static final double HOMING_VOLTS = -0.5;
+
 }

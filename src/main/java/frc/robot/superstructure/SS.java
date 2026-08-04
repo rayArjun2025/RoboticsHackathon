@@ -133,14 +133,14 @@ public class SS extends SubsystemBase<SS.Command> {
         switch ((Scoring) getSubstate()) {
             case RAISING:
                 elevator.trackToHeight(scoreTarget_m);
-                if (elevator.atTarget(ElevatorConstants.TOLERANCE_m)) {
+                if (elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m)) {
                     setSubstate(Scoring.SETTLING);   
                 }
                 break;
 
             case SETTLING:
                 elevator.trackToHeight(scoreTarget_m);
-                if (!elevator.atTarget(ElevatorConstants.TOLERANCE_m)) {
+                if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m)) {
                     setSubstate(Scoring.RAISING);    
                 } else if (substateElapsed(SETTLE_TIME_s)) {
                     setSubstate(Scoring.READY);    
@@ -149,7 +149,7 @@ public class SS extends SubsystemBase<SS.Command> {
 
             case READY:
                 elevator.trackToHeight(scoreTarget_m);
-                if (!elevator.atTarget(ElevatorConstants.TOLERANCE_m)) {
+                if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m)) {
                     setSubstate(Scoring.RAISING);   
                 }
                 break;
