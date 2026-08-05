@@ -1,11 +1,10 @@
 package frc.robot.subsystems.arm;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.devices.motor.MotorConfig.GravityType;
 
-public class ArmConstants {
+public final class ArmConstants {
     public static final int HALL_EFFECT_CHANNEL = 0;
     public static final boolean HALL_INVERTED = true;
     public static final double HALL_DEBOUNCE_s = 0.1;
@@ -18,12 +17,9 @@ public class ArmConstants {
     public static final int HEIGHT_FOLLOWER_ID = 21;
     public static final double HOMING_VOLTS = -0.5;
     public static final double TOLERANCE_RAD = 0.1;
-
-    public static final int FOLLOWER_ID = 21;
     public static final String CANBUS = "rio";
 
     public static final boolean INVERTED = false;
-    public static final MotorAlignmentValue FOLLOWER_OPPOSE = MotorAlignmentValue.Opposed;
     public static final boolean BRAKE = true;
 
  

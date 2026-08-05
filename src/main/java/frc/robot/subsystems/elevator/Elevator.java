@@ -143,7 +143,6 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
 
             case MANUAL:
                 heightMotor.setVoltage(voltsTarget);
-                
                 break;
         }
     }
@@ -177,7 +176,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
 
 
     public void manual(double volts) {
-        voltsTarget = volts;
+        voltsTarget = MathUtil.clamp(volts, -12, 12);
         setCommand(Command.MANUAL);
     }
 

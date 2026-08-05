@@ -33,21 +33,21 @@ public class Arm extends SubsystemBase<Arm.Command>{
     }
     
     
-        private static Arm instance;
-        private final Motor motor;
-        private final HallEffect hallEffect = new HallEffect(
-                "Arm/HallEffect",
-                new HallEffectConfig(HALL_EFFECT_CHANNEL)
-                        .withInverted(HALL_INVERTED)
-                        .withDebounce(HALL_DEBOUNCE_s, HALL_DEBOUNCE_TYPE));
+    private static Arm instance;
+    private final Motor motor;
+    private final HallEffect hallEffect = new HallEffect(
+        "Arm/HallEffect",
+        new HallEffectConfig(HALL_EFFECT_CHANNEL)
+        .withInverted(HALL_INVERTED)
+        .withDebounce(HALL_DEBOUNCE_s, HALL_DEBOUNCE_TYPE));
         
-        private final Arm2d measured2d = new Arm2d("Arm/Measured2d", new Color8Bit(200, 0, 0));
-        private final Arm2d setpoint2d = new Arm2d("Arm/Setpoint2d", new Color8Bit(100, 100, 100));
-        private double targetAngle_rad = Math.toRadians(MAX_ANGLE);
+    private final Arm2d measured2d = new Arm2d("Arm/Measured2d", new Color8Bit(200, 0, 0));
+    private final Arm2d setpoint2d = new Arm2d("Arm/Setpoint2d", new Color8Bit(100, 100, 100));
+    private double targetAngle_rad = Math.toRadians(MAX_ANGLE);
 
-        private double voltsTarget = 0;
-        private boolean zeroed = false;
-        private boolean hallDetected = false;
+    private double voltsTarget = 0;
+    private boolean zeroed = false;
+    private boolean hallDetected = false;
 
     public static Arm getInstance() {
         if (instance == null) {
@@ -63,7 +63,6 @@ public class Arm extends SubsystemBase<Arm.Command>{
         super("Arm");
 
         MotorConfig config = new MotorConfig(MOTOR_ID).withCanbus(CANBUS)
-                .withFollower(HEIGHT_FOLLOWER_ID, FOLLOWER_OPPOSE)
                 .withInverted(INVERTED)
                 .withBrake(BRAKE)
                 .withSupplyCurrentLimit(SUPPLY_CURRENT_LIMIT_A)
@@ -169,7 +168,7 @@ public class Arm extends SubsystemBase<Arm.Command>{
 
 
     public void manual(double volts) {
-        voltsTarget = volts;
+        voltsTarget = MathUtil.clamp(volts, -12, 12);
         setCommand(Command.MANUAL);
     }
 
