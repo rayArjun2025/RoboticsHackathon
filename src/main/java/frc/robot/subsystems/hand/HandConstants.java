@@ -9,8 +9,8 @@ import frc.robot.generated.TunerConstants;
 public final class HandConstants {
 
     public static final int HALL_EFFECT_CHANNEL = 0;
-    public static final double MIN_ANGLE_RAD = 0;
-    public static final double MAX_ANGLE_RAD = 0.52;
+    public static final double CLOSED_ANGLE_RAD = 0;
+    public static final double OPEN_ANGLE_RAD = 0.52;
     public static final boolean HALL_INVERTED = true;
     public static final double HALL_DEBOUNCE_s = 0.1;
     public static final DebounceType HALL_DEBOUNCE_TYPE = DebounceType.kRising;
@@ -54,4 +54,10 @@ public final class HandConstants {
     public static final int MANIPULATOR_SENSOR_ID = 25;
     public static final double TOLERANCE_RAD = 0.1;
     public static final double HOMING_VOLTS = 0.5;
+
+    public static final double MIN_ANGLE_RAD =
+    Math.min(OPEN_ANGLE_RAD, CLOSED_ANGLE_RAD);
+
+    public static final double MAX_ANGLE_RAD =
+        Math.max(OPEN_ANGLE_RAD, CLOSED_ANGLE_RAD);
 }

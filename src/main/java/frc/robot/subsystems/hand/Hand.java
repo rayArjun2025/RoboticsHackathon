@@ -24,7 +24,7 @@ public class Hand extends SubsystemBase<Hand.Command> {
 
     private enum Manipulating{
         HOLDING,
-        GRABBING
+        TRAVELING
     }
 
     private enum Homing{
@@ -42,7 +42,7 @@ public class Hand extends SubsystemBase<Hand.Command> {
                     .withDebounce(HALL_DEBOUNCE_s, HALL_DEBOUNCE_TYPE));
     private boolean hallDetected = false;
     private double targetVolts = 0;
-    private double targetAngle_rad = MAX_ANGLE_RAD;
+    private double targetAngle_rad = OPEN_ANGLE_RAD;
     private boolean zeroed = false;
     
 
@@ -98,7 +98,7 @@ public class Hand extends SubsystemBase<Hand.Command> {
                     case SEEKING:
                         handMotor.setVoltage(HOMING_VOLTS);
                         if (Robot.isSimulation() || hallDetected) {
-                            handMotor.zeroPosition(MAX_ANGLE_RAD);
+                            handMotor.zeroPosition(OPEN_ANGLE_RAD);
                             zeroed = true;
                             setSubstate(Homing.SETTLED);   
                         }
@@ -111,10 +111,10 @@ public class Hand extends SubsystemBase<Hand.Command> {
 
             case MANIPULATING:
                 if (firstLoop()) {
-                    setSubstate(Manipulating.GRABBING);
+                    setSubstate(Manipulating.TRAVELING);
                 }
                 switch ((Manipulating) getSubstate()) {
-                    case GRABBING:
+                    case TRAVELING:
                         handMotor.setMotionMagic(targetAngle_rad);
                         if (atTargetAngle(TOLERANCE_RAD) || !handSensor.get()) {
                             setSubstate(Manipulating.HOLDING);   
@@ -122,6 +122,9 @@ public class Hand extends SubsystemBase<Hand.Command> {
                         break;
                     case HOLDING:
                         handMotor.setMotionMagic(targetAngle_rad);
+                        if (!atTargetAngle(TOLERANCE_RAD)) {
+                            setSubstate(Manipulating.TRAVELING);
+                        }
                         break;
                 }
                 break;
