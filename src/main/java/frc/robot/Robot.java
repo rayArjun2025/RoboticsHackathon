@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.Threads;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.hand.Hand;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.obstacles.ObstacleAvoidance;
 import frc.robot.subsystems.tracking.Tracking;
 import frc.robot.subsystems.vision.Vision;
@@ -46,6 +48,8 @@ public class Robot extends LoggedRobot {
     private ObstacleAvoidance obstacles;
     private SS superstructure;
     private ControlScheme controls;
+    private Intake intake;
+    private Hand hand;
 
 
     @Override
@@ -123,6 +127,8 @@ public class Robot extends LoggedRobot {
         tracking.periodic();
         drive.periodic();
         vision.periodic();
+        hand.periodic();
+        intake.periodic();
 
         PerfTracker.periodic();
         Threads.setCurrentThreadPriority(false, 10);
@@ -178,8 +184,11 @@ public class Robot extends LoggedRobot {
         drive = Drive.getInstance();
         vision = Vision.getInstance();
         tracking = Tracking.getInstance();
+        intake = Intake.getInstance();
+        hand = Hand.getInstance();
         superstructure = SS.getInstance();
         controls = new ControlScheme(superstructure, drive);
+    
     }
 
 }
