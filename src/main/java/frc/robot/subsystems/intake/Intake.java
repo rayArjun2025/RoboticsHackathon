@@ -20,7 +20,8 @@ public class Intake extends SubsystemBase<Intake.Command> {
         DISABLED, 
         IDLE,
         HOMING, 
-        ADJUSTING_SCORING_ANGLE,
+        ADJUSTING_INTAKE_ANGLE,
+        COLLECTING,
         MANUAL
     }
 
@@ -29,8 +30,13 @@ public class Intake extends SubsystemBase<Intake.Command> {
         SETTLED
     }
 
-    private enum Travel {
+    private enum Adjusting {
         MOVING,
+        HOLDING
+    }
+
+    private enum Collecting {
+        INTAKING,
         HOLDING
     }
 
@@ -50,12 +56,13 @@ public class Intake extends SubsystemBase<Intake.Command> {
     private double targetVolts = 0;
     private boolean zeroed = false;
     private boolean hallDetected = false;
+    private int rollerStallCounts = 0;
 
 
     public static Intake getInstance() {
         if (instance == null) {
             instance = new Intake();
-            System.out.println("Elevator initialized.");
+            System.out.println("Intake initialized.");
         }
         return instance;
     }
@@ -76,11 +83,12 @@ public class Intake extends SubsystemBase<Intake.Command> {
         MotorConfig rollerConfig = new MotorConfig(ROLLER_MOTOR_ID).withCanbus(ROLLER_CANBUS)
                 .withInverted(ROLLER_INVERTED)
                 .withBrake(ROLLER_BRAKE)
-                .withSupplyCurrentLimit(ROLLER_SUPPLY_CURRENT_LIMIT_A);
+                .withSupplyCurrentLimit(ROLLER_CURRENT_LIMIT);
                 
 
         intakeMotor = new Motor("IntakeMotor", intakeConfig);
         rollerMotor = new Motor("RollerMotor", rollerConfig);
+
         setCommand(Command.IDLE);
     }
 
@@ -124,28 +132,56 @@ public class Intake extends SubsystemBase<Intake.Command> {
                 }
                 break;
 
-            case ADJUSTING_SCORING_ANGLE:
+            case ADJUSTING_INTAKE_ANGLE:
                 if (firstLoop()) {
-                    setSubstate(Travel.MOVING);
+                    setSubstate(Adjusting.MOVING);
                 }
-                switch ((Travel) getSubstate()) {
+                switch ((Adjusting) getSubstate()) {
                     case MOVING:
                         intakeMotor.setMotionMagic(targetAngle_rad);
-                        if (atTargetHeight(TOLERANCE_RAD)) {
-                            setSubstate(Travel.HOLDING);   
+                        if (atTargetAngle(TOLERANCE_RAD)) {
+                            setSubstate(Adjusting.HOLDING);   
                         }
                         break;
                     case HOLDING:
                         intakeMotor.setMotionMagic(targetAngle_rad);
-                        if (!atTargetHeight(TOLERANCE_RAD)) {
-                            setSubstate(Travel.MOVING);    
+                        if (!atTargetAngle(TOLERANCE_RAD)) {
+                            setSubstate(Adjusting.MOVING);    
                         }
                         break;
                 }
                 break;
 
+            case COLLECTING:
+                if (firstLoop()) {
+                    setSubstate(Collecting.INTAKING);
+                }
+
+                switch ((Collecting) getSubstate()) {
+
+                    case INTAKING:
+                        rollerMotor.setVoltage(INTAKE_VOLTS);
+                        if (rollerMotor.getVoltage() > 0 && rollerMotor.getCurrent() > ROLLER_CURRENT_THRESHOLD) {
+                            rollerStallCounts++;
+                            if(rollerStallCounts > ROLLER_MAX_STALLS){
+                                setSubstate(Collecting.HOLDING);
+                            }
+                        }
+                        else {
+                            rollerStallCounts = 0;
+                        }
+                        break;
+
+                    case HOLDING:
+                        rollerMotor.setVoltage(HOLDING_VOLTS);
+                        break;
+                }
+                break;
+                            
+
             case MANUAL:
                 intakeMotor.setVoltage(targetVolts);
+                rollerMotor.stop();
                 break;
         }
     }
@@ -171,10 +207,10 @@ public class Intake extends SubsystemBase<Intake.Command> {
         setCommand(Command.HOMING);
     }
 
-    public void moveToAngle(double angle_rad) {
-        angle_rad = MathUtil.clamp(angle_rad, MIN_ANGLE_DEG, MAX_ANGLE_DEG);
-        targetAngle_rad = angle_rad;
-        setCommand(Command.ADJUSTING_SCORING_ANGLE);
+    public void moveToAngle(double angle_deg) {
+        angle_deg = MathUtil.clamp(angle_deg, MIN_ANGLE_DEG, MAX_ANGLE_DEG);
+        targetAngle_rad = Math.toRadians(angle_deg);
+        setCommand(Command.ADJUSTING_INTAKE_ANGLE);
     }
 
 
@@ -192,7 +228,7 @@ public class Intake extends SubsystemBase<Intake.Command> {
     }
 
 
-    public boolean atTargetHeight(double tol) {
+    public boolean atTargetAngle(double tol) {
         return Util.inRange(targetAngle_rad - getAngle(), tol);
     }
 

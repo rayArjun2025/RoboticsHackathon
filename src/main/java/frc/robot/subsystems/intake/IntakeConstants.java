@@ -47,8 +47,10 @@ public final class IntakeConstants {
     public static final boolean ROLLER_INVERTED = false;
     public static final boolean ROLLER_BRAKE = false;
 
-    public static final double ROLLER_SUPPLY_CURRENT_LIMIT_A = 20.0;
-
-
-    
+    public static final double ROLLER_MAX_STALLS = 10;
+    public static final double INTAKE_VOLTS = 0.27;
+    public static final double HOLDING_VOLTS = 0.15;
+    public static final double ROLLER_CURRENT_LIMIT = 50;
+    public static final double ROLLER_CURRENT_THRESHOLD = ROLLER_CURRENT_LIMIT - 0.5;
+    public static final double ROLLER_HOLD_CURRENT = 15.0;
 }
