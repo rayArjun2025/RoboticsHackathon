@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase<Intake.Command> {
 
     private static Intake instance;
     private final HallEffect hallEffect = new HallEffect(
-        "Arm/HallEffect",
+        "Intake/HallEffect",
         new HallEffectConfig(HALL_EFFECT_CHANNEL)
         .withInverted(HALL_INVERTED)
         .withDebounce(HALL_DEBOUNCE_s, HALL_DEBOUNCE_TYPE));
