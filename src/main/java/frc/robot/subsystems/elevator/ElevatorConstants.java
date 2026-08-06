@@ -55,4 +55,40 @@ public final class ElevatorConstants {
 
     public static final double HOMING_VOLTS = -0.5;
 
+    public static final double ARM_MIN_ANGLE_DEG = 20;
+    public static final double ARM_MAX_ANGLE_DEG = 90;
+
+    public static final int ARM_MOTOR_ID = 20;
+    public static final double ARM_HOMING_VOLTS = -0.5;
+    public static final double ARM_TOLERANCE_RAD = 0.1;
+    public static final String ARM_CANBUS = TunerConstants.kCANBus.getName();
+
+    public static final boolean ARM_INVERTED = false;
+    public static final boolean ARM_BRAKE = true;
+
+ 
+    public static final double ARM_SUPPLY_CURRENT_LIMIT_A = 40.0;
+
+
+    public static final double ARM_GEAR_RATIO = 100.0;
+    public static final double ARM_RADIANS_TO_ROTATIONS =
+        ARM_GEAR_RATIO / (2.0 * Math.PI);
+
+    public static final double ARM_kP = 10.0;
+    public static final double ARM_kI = 0.0;
+    public static final double ARM_kD = 0.8;    
+
+    public static final double ARM_kS = 0.15;
+    public static final double ARM_kV = 0.10;
+    public static final double ARM_kA = 0.01;
+    public static final double ARM_kG = 0.30;   
+
+    public static final GravityType ARM_GRAVITY = GravityType.ARM;
+    public static final double ARM_MM_CRUISE_VELOCITY = 2.0;
+    public static final double ARM_MM_ACCELERATION = 4.0;
+    public static final double ARM_MM_JERK = 40.0;
+
+    public static final DCMotor ARM_SIM_MOTOR = DCMotor.getKrakenX60Foc(1);
+    public static final double ARM_SIM_MOI = 0.25;
+
 }

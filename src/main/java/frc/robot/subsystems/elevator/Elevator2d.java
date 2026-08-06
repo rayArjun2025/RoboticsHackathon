@@ -32,6 +32,10 @@ public class Elevator2d {
     elev.setLength(height);
   }
 
+  public void setAngle(double angle_rad) {
+    elev.setAngle(angle_rad);
+  }
+
   public void periodic() {
     SmartDashboard.putData(name, mech);
     Logger.recordOutput(name, mech);    
