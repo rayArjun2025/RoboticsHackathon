@@ -1,16 +1,14 @@
 package frc.robot.superstructure;
 
-import frc.robot.ControlScheme;
 import frc.robot.subsystems.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.ElevatorConstants;
+
 
 import java.util.EnumSet;
 
 import org.littletonrobotics.junction.Logger;
 
-public class SS extends SubsystemBase<SS.Command> {
+/*public class SS extends SubsystemBase<SS.Command> {
 
     public enum Flag {
         HOME,
@@ -161,4 +159,4 @@ public class SS extends SubsystemBase<SS.Command> {
         String[] active = flags.stream().map(Enum::name).toArray(String[]::new);
         Logger.recordOutput("Superstructure/Flags", active);
     }
-}
+}*/
