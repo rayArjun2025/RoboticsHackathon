@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2026.2.1"
+    id "com.diffplug.spotless" version "7.2.1"
 }
 
 java {
@@ -54,6 +55,12 @@ def includeDesktopSupport = false
 // Also defines JUnit 5.
 dependencies {
     annotationProcessor wpi.java.deps.wpilibAnnotations()
+    
+    def akitJson = new groovy.json.JsonSlurper().parseText(
+        new File(projectDir, "vendordeps/AdvantageKit.json").text
+    )
+    annotationProcessor "org.littletonrobotics.akit:akit-autolog:${akitJson.version}"
+
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 
