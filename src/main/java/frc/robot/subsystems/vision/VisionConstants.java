@@ -21,13 +21,18 @@ public final class VisionConstants {
     // fall in the camera FOV. It must reflect the real mounting. In WPILib's NWU frame a positive
     // pitch points the camera DOWN; an AprilTag camera is tilted UP, so the pitch is negative.
     public static final CameraConfig[] CAMERAS = {
-        new CameraConfig(
-                "limelight-sean",
-                new Transform3d(
-                        new Translation3d(0.0889, -0.2794, 0.4445),
-                        new Rotation3d(0, Units.degreesToRadians(-20), 0))),
-        // new CameraConfig("limelight-back",
-        //         new Transform3d(new Translation3d(-0.1, 0.0, 0.4), new Rotation3d(0, 0, Math.PI))),
+        new CameraConfig( "limelight-camera1", new Transform3d( 
+            new Translation3d( 
+                Units.inchesToMeters(-10.406), 
+                Units.inchesToMeters(6.603), 
+                Units.inchesToMeters(49.240)),  
+                new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(30)))),
+        new CameraConfig("limelight-camera2", new Transform3d(
+          new Translation3d(
+              Units.inchesToMeters(-10.406),
+              Units.inchesToMeters(-6.603),
+              Units.inchesToMeters(49.240)),
+          new Rotation3d(0, Units.degreesToRadians(25), Units.degreesToRadians(-30))))
     };
 
     // ---- Per-limelight measurement noise ----
