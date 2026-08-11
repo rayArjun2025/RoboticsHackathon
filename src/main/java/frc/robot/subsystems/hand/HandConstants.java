@@ -28,22 +28,21 @@ public final class HandConstants {
         HAND_GEAR_RATIO / (2.0 * Math.PI);
 
       
-    public static final double HAND_kP = 6.0;
+    public static final double HAND_kP = 3.0;
     public static final double HAND_kI = 0.0;
-    public static final double HAND_kD = 0.2;
+    public static final double HAND_kD = 0.5;
 
-
-    public static final double HAND_kS = 0.08;
+    public static final double HAND_kS = 0.04;
     public static final double HAND_kV = 0.05;
     public static final double HAND_kA = 0.0;
-    public static final double HAND_kG = 0.0; 
+    public static final double HAND_kG = 0.0;
 
     public static final GravityType HAND_GRAVITY =
             GravityType.NONE;
 
-    public static final double HAND_MM_CRUISE_VELOCITY = 1.0;
-    public static final double HAND_MM_ACCELERATION = 3.0;
-    public static final double HAND_MM_JERK = 30.0;
+    public static final double HAND_MM_CRUISE_VELOCITY = 0.5;
+    public static final double HAND_MM_ACCELERATION = 1.5;
+    public static final double HAND_MM_JERK = 10.0;
 
 
     public static final DCMotor HAND_SIM_MOTOR =
@@ -52,7 +51,7 @@ public final class HandConstants {
     public static final double HAND_SIM_MOI = 0.01;
 
     public static final int MANIPULATOR_SENSOR_ID = 25;
-    public static final double TOLERANCE_RAD = 0.1;
+    public static final double TOLERANCE_RAD = 0.03;
     public static final double HOMING_VOLTS = 0.5;
 
     public static final double MIN_ANGLE_RAD =

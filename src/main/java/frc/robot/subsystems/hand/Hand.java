@@ -116,13 +116,13 @@ public class Hand extends SubsystemBase<Hand.Command> {
                 switch ((Manipulating) getSubstate()) {
                     case TRAVELING:
                         handMotor.setMotionMagic(targetAngle_rad);
-                        if (atTargetAngle(TOLERANCE_RAD) || !handSensor.get()) {
+                        if (atTargetAngle(TOLERANCE_RAD)) {
                             setSubstate(Manipulating.HOLDING);   
                         }
                         break;
                     case HOLDING:
                         handMotor.setMotionMagic(targetAngle_rad);
-                        if (!atTargetAngle(TOLERANCE_RAD) && handSensor.get()) {
+                        if (!atTargetAngle(TOLERANCE_RAD)) {
                             setSubstate(Manipulating.TRAVELING);
                         }
                         break;
@@ -143,6 +143,11 @@ public class Hand extends SubsystemBase<Hand.Command> {
         Logger.recordOutput("Hand/Target_rad", targetAngle_rad);
         Logger.recordOutput("Hand/HasGamePiece", !handSensor.get());
         Logger.recordOutput("Hand/Zeroed", zeroed);
+        Logger.recordOutput("Hand/HallDetected", hallDetected);
+        Logger.recordOutput("Hand/Sensor", handSensor.get());
+        Logger.recordOutput("Hand/Command", getCommand().toString());
+        Logger.recordOutput("Hand/AngleError", targetAngle_rad - getAngle());
+        Logger.recordOutput("Hand/AtTarget", atTargetAngle(TOLERANCE_RAD));
     }
 
     public void idle() {

@@ -97,6 +97,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     @Override
     protected void inputPeriodic() {
         heightMotor.readInputs();
+        angleMotor.readInputs();
         hallEffect.readInputs();
         hallDetected = hallEffect.get();
     }
@@ -142,7 +143,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
                     case MOVING:
                         heightMotor.setMotionMagic(targetHeight_m);
                         angleMotor.setMotionMagic(targetAngle_rad);
-                        if (atTargetHeight(TOLERANCE_m) || atTargetAngle(ARM_TOLERANCE_RAD)) {
+                        if (atTargetHeight(TOLERANCE_m) && atTargetAngle(ARM_TOLERANCE_RAD)) {
                             setSubstate(Travel.HOLDING);   
                         }
                         break;
@@ -183,7 +184,6 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
         Logger.recordOutput("Elevator/Angle_rad", getAngle());
         Logger.recordOutput("Elevator/Velocity_rps", angleMotor.getVelocity());
         Logger.recordOutput("Elevator/TargetAngle_rad", targetAngle_rad);
-        Logger.recordOutput("Elevator/Zeroed", isZeroed());
     }
 
 

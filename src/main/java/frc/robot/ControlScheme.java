@@ -43,11 +43,18 @@ public class ControlScheme {
             drive.setPathingOverride(PathingOverride.NONE);
         }
 
+        
         ss.set(Flag.HOME, OI.DR.getBackButton());
         ss.set(Flag.MANUAL_UP, OI.DR.getAButton());
         ss.set(Flag.MANUAL_DOWN, OI.DR.getBButton());
-        //ss.set(Flag.SCORE_LOW, OI.DR.getXButton());
-        //ss.set(Flag.SCORE_HIGH, OI.DR.getYButton());
+        ss.set(Flag.L1_CONE, OI.DR.getXButton());
+        ss.set(Flag.L1_CUBE, OI.DR.getYButton());
+        ss.set(Flag.L2_CONE, OI.DR.getLeftStickButton());
+        ss.set(Flag.L2_CUBE, OI.DR.getRightStickButton());
+        ss.set(Flag.L3_CONE, OI.DR.getLeftBumperButton());
+        ss.set(Flag.L3_CUBE, OI.DR.getRightBumperButton());
+        
+
 
     }
 }

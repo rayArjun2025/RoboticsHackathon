@@ -60,7 +60,7 @@ public final class ElevatorConstants {
     public static final double ARM_HOMING_DEG = 80;
 
     public static final int ARM_MOTOR_ID = 20;
-    public static final double ARM_HOMING_VOLTS = -0.5;
+    public static final double ARM_HOMING_VOLTS = 0.5;
     public static final double ARM_TOLERANCE_RAD = 0.1;
     public static final String ARM_CANBUS = TunerConstants.kCANBus.getName();
 
