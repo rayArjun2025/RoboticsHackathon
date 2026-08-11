@@ -45,8 +45,10 @@ public class ControlScheme {
 
         
         ss.set(Flag.HOME, OI.DR.getBackButton());
-        ss.set(Flag.MANUAL_UP, OI.DR.getAButton());
-        ss.set(Flag.MANUAL_DOWN, OI.DR.getBButton());
+        //ss.set(Flag.MANUAL_UP, OI.DR.getAButton());
+        //ss.set(Flag.MANUAL_DOWN, OI.DR.getBButton());
+        ss.set(Flag.DRIVERSTATION_INTAKE_CONE, OI.DR.getAButton());
+        ss.set(Flag.DRIVERSTATION_INTAKE_CUBE, OI.DR.getBButton());
         ss.set(Flag.L1_CONE, OI.DR.getXButton());
         ss.set(Flag.L1_CUBE, OI.DR.getYButton());
         ss.set(Flag.L2_CONE, OI.DR.getLeftStickButton());
@@ -54,6 +56,9 @@ public class ControlScheme {
         ss.set(Flag.L3_CONE, OI.DR.getLeftBumperButton());
         ss.set(Flag.L3_CUBE, OI.DR.getRightBumperButton());
         
+        //ss.set(Flag.DRIVERSTATION_INTAKE_CONE, false);
+        //ss.set(Flag.DRIVERSTATION_INTAKE_CUBE, false);
+
 
 
     }

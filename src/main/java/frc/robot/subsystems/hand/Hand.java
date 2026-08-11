@@ -66,7 +66,7 @@ public class Hand extends SubsystemBase<Hand.Command> {
             .withMotionMagic(HAND_MM_CRUISE_VELOCITY, HAND_MM_ACCELERATION, HAND_MM_JERK)
             .withSensorToMechanismRatio(HAND_RADIANS_TO_ROTATIONS)
             .withSupplyCurrentLimit(HAND_SUPPLY_CURRENT_LIMIT_A)
-            .withSim(HAND_SIM_MOTOR, HAND_RADIANS_TO_ROTATIONS, HAND_SIM_MOI);
+            .withSim(HAND_SIM_MOTOR, HAND_GEAR_RATIO, HAND_SIM_MOI);
         
         handMotor = new Motor("Hand/HandMotor", config);
         this.handSensor = new DigitalInput(HandConstants.MANIPULATOR_SENSOR_ID);
@@ -161,7 +161,9 @@ public class Hand extends SubsystemBase<Hand.Command> {
     public void moveToAngle(double angle_rad) {
         angle_rad = MathUtil.clamp(angle_rad, MIN_ANGLE_RAD, MAX_ANGLE_RAD);
         targetAngle_rad = angle_rad;
-        setCommand(Command.MANIPULATING);
+        if (getCommand() != Command.MANIPULATING) {
+            setCommand(Command.MANIPULATING);
+        }
     }
 
 

@@ -145,7 +145,7 @@ public class SS extends SubsystemBase<SS.Command> {
         else if(has(Flag.DRIVERSTATION_INTAKE_CONE) || has(Flag.DRIVERSTATION_INTAKE_CUBE)){
             scoreTarget_m = ElevatorConstants.DRIVER_STATION_EXTENSION_M;
             targetAngle_deg = ElevatorConstants.DRIVER_STATION_ANGLE_DEG;
-            handAngle_rad = has(Flag.L3_CONE) ? HandConstants.CONE_GRAB_ANGLE_RAD : HandConstants.CUBE_GRAB_ANGLE_RAD;
+            handAngle_rad = has(Flag.DRIVERSTATION_INTAKE_CONE) ? HandConstants.CONE_GRAB_ANGLE_RAD : HandConstants.CUBE_GRAB_ANGLE_RAD;
             setCommand(Command.INTAKING);
         }
         else {
@@ -270,5 +270,6 @@ public class SS extends SubsystemBase<SS.Command> {
     protected void outputPeriodic() {
         String[] active = flags.stream().map(Enum::name).toArray(String[]::new);
         Logger.recordOutput("Superstructure/Flags", active);
+        Logger.recordOutput("Superstructure/Command", getCommand());
     }
 }
