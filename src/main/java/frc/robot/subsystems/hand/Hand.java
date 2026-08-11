@@ -116,13 +116,13 @@ public class Hand extends SubsystemBase<Hand.Command> {
                 switch ((Manipulating) getSubstate()) {
                     case TRAVELING:
                         handMotor.setMotionMagic(targetAngle_rad);
-                        if (atTargetAngle(TOLERANCE_RAD)) {
+                        if (atTargetAngle(TOLERANCE_RAD) && !handSensor.get()) {
                             setSubstate(Manipulating.HOLDING);   
                         }
                         break;
                     case HOLDING:
                         handMotor.setMotionMagic(targetAngle_rad);
-                        if (!atTargetAngle(TOLERANCE_RAD)) {
+                        if (!atTargetAngle(TOLERANCE_RAD) || handSensor.get()) {
                             setSubstate(Manipulating.TRAVELING);
                         }
                         break;
