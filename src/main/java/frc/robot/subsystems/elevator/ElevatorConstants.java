@@ -57,6 +57,7 @@ public final class ElevatorConstants {
 
     public static final double ARM_MIN_ANGLE_DEG = 20;
     public static final double ARM_MAX_ANGLE_DEG = 90;
+    public static final double ARM_HOMING_DEG = 80;
 
     public static final int ARM_MOTOR_ID = 20;
     public static final double ARM_HOMING_VOLTS = -0.5;
@@ -90,5 +91,22 @@ public final class ElevatorConstants {
 
     public static final DCMotor ARM_SIM_MOTOR = DCMotor.getKrakenX60Foc(1);
     public static final double ARM_SIM_MOI = 0.25;
+    
+    public static final double L1_ANGLE_DEG = 80;
+    public static final double L1_VERTICAL_HEIGHT = 1.168;
+    public static final double L1_ELEVATOR_HEIGHT = L1_VERTICAL_HEIGHT / Math.sin(Math.toRadians(L1_ANGLE_DEG));
+    public static final double L2_ANGLE_DEG = 55;
+    public static final double L2_VERTICAL_HEIGHT = 0.597;
+    public static final double L2_HEIGHT = L2_VERTICAL_HEIGHT / Math.sin(Math.toRadians(L2_ANGLE_DEG));
+    public static final double L3_VERTICAL_HEIGHT_M = 0.117;
+    public static final double L3_ANGLE_DEG = 30;
+    public static final double L3_ELEV_HEIGHT_M = L3_VERTICAL_HEIGHT_M / Math.sin(Math.toRadians(L3_ANGLE_DEG));
+
+    public static final double DRIVER_STATION_ANGLE_DEG = 56.0;
+    public static final double DRIVER_STATION_HEIGHT_M = 0.87;
+
+    public static final double DRIVER_STATION_EXTENSION_M =
+        DRIVER_STATION_HEIGHT_M
+        / Math.sin(Math.toRadians(DRIVER_STATION_ANGLE_DEG));
 
 }

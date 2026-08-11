@@ -1,10 +1,13 @@
 package frc.robot.superstructure;
-
-import frc.robot.ControlScheme;
+import frc.robot.subsystems.elevator.ElevatorConstants;
+import frc.robot.subsystems.hand.HandConstants;
 import frc.robot.subsystems.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.ElevatorConstants;
+
+import frc.robot.subsystems.hand.Hand;
+
+import frc.robot.subsystems.intake.Intake;
 
 import java.util.EnumSet;
 
@@ -14,8 +17,14 @@ public class SS extends SubsystemBase<SS.Command> {
 
     public enum Flag {
         HOME,
-        SCORE_LOW,
-        SCORE_HIGH,
+        DRIVERSTATION_INTAKE_CUBE,
+        DRIVERSTATION_INTAKE_CONE,
+        L1_CONE,
+        L1_CUBE,
+        L2_CONE,
+        L2_CUBE,
+        L3_CONE,
+        L3_CUBE,
         MANUAL_UP,
         MANUAL_DOWN
     }
@@ -24,18 +33,31 @@ public class SS extends SubsystemBase<SS.Command> {
         IDLE,
         HOMING,
         STOWING,
+        INTAKING,
         SCORING,
+        HOLDING,
         MANUAL
+    }
+
+    private enum Intaking{
+        RAISING, 
+        SETTLING, 
+        READY_TO_INTAKE,
     }
 
     private enum Scoring {
         RAISING,
         SETTLING,
-        READY
+        READY_TO_SCORE,
+    }
+
+    private enum Holding{
+        SETTLING,
+        HOLD
     }
 
     private static final double MANUAL_VOLTS = 2.0;
-    private static final double SCORE_LOW_HEIGHT_m = 1.2;
+    
     private static final double SETTLE_TIME_s = 0.2;
 
     private static SS instance;
@@ -44,8 +66,13 @@ public class SS extends SubsystemBase<SS.Command> {
 
     private final Elevator elevator;
     private final Drive drive;
+    private final Hand hand;
+    private final Intake intake;
 
     private double scoreTarget_m = ElevatorConstants.MIN_HEIGHT_m;
+    private double targetAngle_deg = ElevatorConstants.ARM_MAX_ANGLE_DEG;
+    private double handAngle_rad = HandConstants.OPEN_ANGLE_RAD;
+
 
     public static SS getInstance() {
         if (instance == null) {
@@ -58,6 +85,8 @@ public class SS extends SubsystemBase<SS.Command> {
         super("Superstructure");
         elevator = Elevator.getInstance();
         drive = Drive.getInstance();
+        hand = Hand.getInstance();
+        intake = Intake.getInstance();
         setCommand(Command.IDLE);
     }
 
@@ -97,28 +126,56 @@ public class SS extends SubsystemBase<SS.Command> {
             setCommand(Command.HOMING);
         } else if (has(Flag.MANUAL_UP) || has(Flag.MANUAL_DOWN)) {
             setCommand(Command.MANUAL);
-        } else if (has(Flag.SCORE_HIGH)) {
-            scoreTarget_m = ElevatorConstants.MAX_HEIGHT_m;
+        } else if (has(Flag.L1_CONE) || has(Flag.L1_CUBE)) {
+            scoreTarget_m = ElevatorConstants.L1_ELEVATOR_HEIGHT;
+            targetAngle_deg = ElevatorConstants.L1_ANGLE_DEG;
+            handAngle_rad = has(Flag.L1_CONE) ? HandConstants.CONE_HOLD_ANGLE_RAD : HandConstants.CUBE_HOLD_ANGLE_RAD;
             setCommand(Command.SCORING);
-        } else if (has(Flag.SCORE_LOW)) {
-            scoreTarget_m = SCORE_LOW_HEIGHT_m;
+        } else if (has(Flag.L2_CONE) || has(Flag.L2_CUBE)) {
+            scoreTarget_m = ElevatorConstants.L2_HEIGHT;
+            targetAngle_deg = ElevatorConstants.L2_ANGLE_DEG;
+            handAngle_rad = has(Flag.L2_CONE) ? HandConstants.CONE_HOLD_ANGLE_RAD : HandConstants.CUBE_HOLD_ANGLE_RAD;
             setCommand(Command.SCORING);
-        } else {
+        } else if(has(Flag.L3_CONE) || has(Flag.L3_CUBE)){
+           scoreTarget_m = ElevatorConstants.L3_ELEV_HEIGHT_M;
+           targetAngle_deg = ElevatorConstants.L3_ANGLE_DEG;
+           handAngle_rad = has(Flag.L3_CONE) ? HandConstants.CONE_HOLD_ANGLE_RAD : HandConstants.CUBE_HOLD_ANGLE_RAD;
+           setCommand(Command.SCORING);
+        }
+        else if(has(Flag.DRIVERSTATION_INTAKE_CONE) || has(Flag.DRIVERSTATION_INTAKE_CUBE)){
+            scoreTarget_m = ElevatorConstants.DRIVER_STATION_EXTENSION_M;
+            targetAngle_deg = ElevatorConstants.DRIVER_STATION_ANGLE_DEG;
+            handAngle_rad = has(Flag.L3_CONE) ? HandConstants.CONE_GRAB_ANGLE_RAD : HandConstants.CUBE_GRAB_ANGLE_RAD;
+            setCommand(Command.INTAKING);
+        }
+        else {
             setCommand(Command.STOWING);
         }
 
         switch (getCommand()) {
             case HOMING:
                 elevator.home();
+                intake.home();
+                hand.home();
                 break;
             case MANUAL:
                 elevator.manual(has(Flag.MANUAL_UP) ? MANUAL_VOLTS : -MANUAL_VOLTS);
+                intake.manual(has(Flag.MANUAL_UP) ? MANUAL_VOLTS : -MANUAL_VOLTS);
+                hand.manual(has(Flag.MANUAL_UP) ? MANUAL_VOLTS : -MANUAL_VOLTS);
                 break;
             case SCORING:
                 handleScoring();
                 break;
+            case INTAKING:
+                handleIntaking();
+                break;
+            case HOLDING:
+                elevator.home();
+                hand.moveToAngle(handAngle_rad);
+                break;
             case STOWING:
                 elevator.trackToHeight(ElevatorConstants.MIN_HEIGHT_m);
+                hand.moveToAngle(HandConstants.OPEN_ANGLE_RAD);
                 break;
             case IDLE:
                 break;
@@ -133,28 +190,81 @@ public class SS extends SubsystemBase<SS.Command> {
         switch ((Scoring) getSubstate()) {
             case RAISING:
                 elevator.trackToHeight(scoreTarget_m);
-                if (elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m)) {
+                elevator.tracktoAngle(targetAngle_deg);
+                hand.moveToAngle(handAngle_rad);
+                if (elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) && elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) && hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
                     setSubstate(Scoring.SETTLING);   
                 }
                 break;
 
             case SETTLING:
                 elevator.trackToHeight(scoreTarget_m);
-                if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m)) {
+                elevator.tracktoAngle(targetAngle_deg);
+                hand.moveToAngle(handAngle_rad);
+                if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) || !hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
                     setSubstate(Scoring.RAISING);    
                 } else if (substateElapsed(SETTLE_TIME_s)) {
-                    setSubstate(Scoring.READY);    
+                    setSubstate(Scoring.READY_TO_SCORE);    
                 }
                 break;
 
-            case READY:
+            case READY_TO_SCORE:
                 elevator.trackToHeight(scoreTarget_m);
-                if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m)) {
+                elevator.tracktoAngle(targetAngle_deg);
+                hand.moveToAngle(HandConstants.OPEN_ANGLE_RAD);
+                if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) || !hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
                     setSubstate(Scoring.RAISING);   
+                }
+                break;
+            
+        }
+    }
+
+    private void handleIntaking(){
+        if(firstLoop()){
+            setSubstate(Intaking.RAISING);
+        }
+
+        switch((Intaking) getSubstate()){
+            case RAISING:
+                elevator.trackToHeight(scoreTarget_m);
+                elevator.tracktoAngle(targetAngle_deg);
+                hand.moveToAngle(handAngle_rad);
+                if (elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) && elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) && hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
+                    setSubstate(Intaking.SETTLING);   
+                }
+                break;
+
+            case SETTLING:
+                elevator.trackToHeight(scoreTarget_m);
+                elevator.tracktoAngle(targetAngle_deg);
+                hand.moveToAngle(handAngle_rad);
+                if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) || !hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
+                    setSubstate(Intaking.RAISING);    
+                } else if (substateElapsed(SETTLE_TIME_s)) {
+                    setSubstate(Intaking.READY_TO_INTAKE);    
+                }
+                break;
+
+            case READY_TO_INTAKE:
+                elevator.trackToHeight(scoreTarget_m);
+                elevator.tracktoAngle(targetAngle_deg);
+                hand.moveToAngle(handAngle_rad);
+                if(elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) && elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) && hand.atTargetAngle(HandConstants.TOLERANCE_RAD)){
+                    if(handAngle_rad == HandConstants.CONE_GRAB_ANGLE_RAD)
+                        handAngle_rad = HandConstants.CONE_HOLD_ANGLE_RAD;
+                    else
+                        handAngle_rad = HandConstants.CUBE_HOLD_ANGLE_RAD;
+                    setCommand(Command.HOLDING);
+                }
+                else if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) || !hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
+                    setSubstate(Intaking.RAISING);   
                 }
                 break;
         }
     }
+
+    
 
     @Override
     protected void outputPeriodic() {

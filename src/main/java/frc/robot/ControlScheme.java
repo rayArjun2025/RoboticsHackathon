@@ -46,8 +46,8 @@ public class ControlScheme {
         ss.set(Flag.HOME, OI.DR.getBackButton());
         ss.set(Flag.MANUAL_UP, OI.DR.getAButton());
         ss.set(Flag.MANUAL_DOWN, OI.DR.getBButton());
-        ss.set(Flag.SCORE_LOW, OI.DR.getXButton());
-        ss.set(Flag.SCORE_HIGH, OI.DR.getYButton());
+        //ss.set(Flag.SCORE_LOW, OI.DR.getXButton());
+        //ss.set(Flag.SCORE_HIGH, OI.DR.getYButton());
 
     }
 }

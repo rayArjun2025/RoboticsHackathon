@@ -60,4 +60,12 @@ public final class HandConstants {
 
     public static final double MAX_ANGLE_RAD =
         Math.max(OPEN_ANGLE_RAD, CLOSED_ANGLE_RAD);
+    
+
+    public static final double CUBE_GRAB_ANGLE_RAD = 0.40;
+    public static final double CUBE_HOLD_ANGLE_RAD   = 0.15;
+
+    public static final double CONE_GRAB_ANGLE_RAD = 0.32;
+    public static final double CONE_HOLD_ANGLE_RAD   = 0.08;
+
 }

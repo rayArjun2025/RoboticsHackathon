@@ -123,7 +123,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
                         angleMotor.setVoltage(ARM_HOMING_VOLTS);
                         if (Robot.isSimulation() || hallDetected) {
                             heightMotor.zeroPosition(MIN_HEIGHT_m);
-                            angleMotor.zeroPosition(Math.toRadians(ARM_MAX_ANGLE_DEG));
+                            angleMotor.zeroPosition(Math.toRadians(ARM_HOMING_DEG));
                             zeroed = true;
                             setSubstate(Homing.SETTLED);   
                         }
