@@ -175,6 +175,7 @@ public class SS extends SubsystemBase<SS.Command> {
                 break;
             case STOWING:
                 elevator.trackToHeight(ElevatorConstants.MIN_HEIGHT_m);
+                elevator.tracktoAngle(ElevatorConstants.ARM_HOMING_DEG);
                 hand.moveToAngle(HandConstants.OPEN_ANGLE_RAD);
                 break;
             case IDLE:
@@ -212,7 +213,10 @@ public class SS extends SubsystemBase<SS.Command> {
                 elevator.trackToHeight(scoreTarget_m);
                 elevator.tracktoAngle(targetAngle_deg);
                 hand.moveToAngle(HandConstants.OPEN_ANGLE_RAD);
-                if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) || !hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
+                if(elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) && elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD)){
+                    setCommand(Command.STOWING);
+                }
+                else if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) || !hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
                     setSubstate(Scoring.RAISING);   
                 }
                 break;

@@ -78,7 +78,7 @@ public class Intake extends SubsystemBase<Intake.Command> {
                 .withSupplyCurrentLimit(ARM_SUPPLY_CURRENT_LIMIT_A)
                 .withSensorToMechanismRatio(ARM_RADIANS_TO_ROTATIONS)
                 .withMotionMagic(ARM_MM_CRUISE_VELOCITY, ARM_MM_ACCELERATION, ARM_MM_JERK)
-                .withSim(ARM_SIM_MOTOR, ARM_GEAR_RATIO, ARM_SIM_MOI);
+                .withSim(ARM_SIM_MOTOR, ARM_RADIANS_TO_ROTATIONS, ARM_SIM_MOI);
 
         MotorConfig rollerConfig = new MotorConfig(ROLLER_MOTOR_ID).withCanbus(ROLLER_CANBUS)
                 .withInverted(ROLLER_INVERTED)
