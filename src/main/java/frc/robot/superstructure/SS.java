@@ -117,7 +117,7 @@ public class SS extends SubsystemBase<SS.Command> {
 
     @Override
     protected void inputPeriodic() {
-        
+
     }
 
     @Override
