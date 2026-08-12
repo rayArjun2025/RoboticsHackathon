@@ -22,6 +22,7 @@ public class Intake extends SubsystemBase<Intake.Command> {
         COLLECTING,
         MANUAL
     }
+    
 
     private enum Homing {
         SEEKING,
@@ -148,7 +149,6 @@ public class Intake extends SubsystemBase<Intake.Command> {
                 }
 
                 switch ((Collecting) getSubstate()) {
-
                     case INTAKING:
                         rollerMotor.setVoltage(INTAKE_VOLTS);
                         if (rollerMotor.getVoltage() > 0 && rollerMotor.getCurrent() > ROLLER_CURRENT_THRESHOLD) {
