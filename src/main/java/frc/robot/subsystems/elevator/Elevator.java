@@ -181,9 +181,9 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
         Logger.recordOutput("Elevator/TargetHeight_m", targetHeight_m);
         Logger.recordOutput("Elevator/Zeroed", isZeroed());
 
-        Logger.recordOutput("Elevator/Angle_rad", getAngle());
+        Logger.recordOutput("Elevator/Angle_rad", Math.toDegrees(getAngle()));
         Logger.recordOutput("Elevator/Velocity_rps", angleMotor.getVelocity());
-        Logger.recordOutput("Elevator/TargetAngle_rad", targetAngle_rad);
+        Logger.recordOutput("Elevator/TargetAngle_rad", Math.toDegrees(targetAngle_rad));
     }
 
 

@@ -59,14 +59,15 @@ public class Hand extends SubsystemBase<Hand.Command> {
         super("Hand");
 
         MotorConfig config = new MotorConfig(HAND_MOTOR_ID).withCanbus(HAND_CANBUS)
+           .withInverted(HAND_INVERTED)
             .withBrake(HAND_BRAKE)
-            .withInverted(HAND_INVERTED)
+            .withSupplyCurrentLimit(HAND_SUPPLY_CURRENT_LIMIT_A)
+            .withSensorToMechanismRatio(HAND_RADIANS_TO_ROTATIONS)
             .withFFGains(HAND_kS, HAND_kV, HAND_kA, HAND_kG)
             .withPIDGains(HAND_kP, HAND_kI, HAND_kD, HAND_GRAVITY)
             .withMotionMagic(HAND_MM_CRUISE_VELOCITY, HAND_MM_ACCELERATION, HAND_MM_JERK)
-            .withSensorToMechanismRatio(HAND_RADIANS_TO_ROTATIONS)
-            .withSupplyCurrentLimit(HAND_SUPPLY_CURRENT_LIMIT_A)
-            .withSim(HAND_SIM_MOTOR, HAND_GEAR_RATIO, HAND_SIM_MOI);
+            .withSim(HAND_SIM_MOTOR, HAND_RADIANS_TO_ROTATIONS, HAND_SIM_MOI);
+
         
         handMotor = new Motor("Hand/HandMotor", config);
         this.handSensor = new DigitalInput(HandConstants.MANIPULATOR_SENSOR_ID);
@@ -116,13 +117,13 @@ public class Hand extends SubsystemBase<Hand.Command> {
                 switch ((Manipulating) getSubstate()) {
                     case TRAVELING:
                         handMotor.setMotionMagic(targetAngle_rad);
-                        if (atTargetAngle(TOLERANCE_RAD) && !handSensor.get()) {
+                        if (atTargetAngle(TOLERANCE_RAD)) {
                             setSubstate(Manipulating.HOLDING);   
                         }
                         break;
                     case HOLDING:
                         handMotor.setMotionMagic(targetAngle_rad);
-                        if (!atTargetAngle(TOLERANCE_RAD) || handSensor.get()) {
+                        if (!atTargetAngle(TOLERANCE_RAD)) {
                             setSubstate(Manipulating.TRAVELING);
                         }
                         break;
@@ -139,14 +140,15 @@ public class Hand extends SubsystemBase<Hand.Command> {
 
     @Override
     protected void outputPeriodic(){
-        Logger.recordOutput("Hand/Angle_rad", getAngle());
-        Logger.recordOutput("Hand/Target_rad", targetAngle_rad);
+        Logger.recordOutput("Hand/Angle_rad", Math.toDegrees(getAngle()));
+        Logger.recordOutput("Hand/Target_rad", Math.toDegrees(targetAngle_rad));
         Logger.recordOutput("Hand/HasGamePiece", !handSensor.get());
         Logger.recordOutput("Hand/Zeroed", zeroed);
         Logger.recordOutput("Hand/HallDetected", hallDetected);
         Logger.recordOutput("Hand/Sensor", handSensor.get());
         Logger.recordOutput("Hand/Command", getCommand().toString());
-        Logger.recordOutput("Hand/AngleError", targetAngle_rad - getAngle());
+        //Logger.recordOutput("Hand/Substate", getSubstate().toString());
+        Logger.recordOutput("Hand/AngleError", Math.toDegrees(targetAngle_rad - getAngle()));
         Logger.recordOutput("Hand/AtTarget", atTargetAngle(TOLERANCE_RAD));
     }
 
