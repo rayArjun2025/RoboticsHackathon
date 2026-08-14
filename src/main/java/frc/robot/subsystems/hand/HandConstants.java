@@ -28,18 +28,18 @@ public final class HandConstants {
         HAND_GEAR_RATIO / (2.0 * Math.PI);
 
       
-    public static final double HAND_kP = 6.0;
+    public static final double HAND_kP = 10.0;
     public static final double HAND_kI = 0.0;
     public static final double HAND_kD = 0.5;
 
     public static final double HAND_kS = 0.0;
-    public static final double HAND_kV = 0.10;
+    public static final double HAND_kV = 0.12;
     public static final double HAND_kA = 0.01;
     public static final double HAND_kG = 0.0;
 
-    public static final double HAND_MM_CRUISE_VELOCITY = 0.25;
-    public static final double HAND_MM_ACCELERATION = 0.5;
-    public static final double HAND_MM_JERK = 5.0;
+    public static final double HAND_MM_CRUISE_VELOCITY = 2;
+    public static final double HAND_MM_ACCELERATION = 4;
+    public static final double HAND_MM_JERK = 40;
 
 
     public static final GravityType HAND_GRAVITY =
