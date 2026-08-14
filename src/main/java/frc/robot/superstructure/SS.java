@@ -254,7 +254,7 @@ public class SS extends SubsystemBase<SS.Command> {
                 if(substateElapsed(SETTLE_TIME_s)){
                     setSubstate(Intaking.READY_TO_INTAKE);
                 }
-                else if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD)) {
+                else if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) || !hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
                     setSubstate(Intaking.RAISING);    
                 } 
                 break;
@@ -270,7 +270,7 @@ public class SS extends SubsystemBase<SS.Command> {
                         handAngle_rad = HandConstants.CUBE_HOLD_ANGLE_RAD;
                     setCommand(Command.HOLDING);
                 }
-                else if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD)) {
+                else if (!elevator.atTargetHeight(ElevatorConstants.TOLERANCE_m) || !elevator.atTargetAngle(ElevatorConstants.ARM_TOLERANCE_RAD) || !hand.atTargetAngle(HandConstants.TOLERANCE_RAD)) {
                     setSubstate(Intaking.RAISING);   
                 }
                 break;
