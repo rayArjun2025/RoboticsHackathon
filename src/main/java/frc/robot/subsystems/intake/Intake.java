@@ -6,8 +6,6 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Robot;
-import frc.robot.devices.halleffect.HallEffect;
-import frc.robot.devices.halleffect.HallEffectConfig;
 import frc.robot.devices.motor.Motor;
 import frc.robot.devices.motor.MotorConfig;
 import frc.robot.subsystems.SubsystemBase;
@@ -24,6 +22,7 @@ public class Intake extends SubsystemBase<Intake.Command> {
         COLLECTING,
         MANUAL
     }
+    
 
     private enum Homing {
         SEEKING,
@@ -41,11 +40,6 @@ public class Intake extends SubsystemBase<Intake.Command> {
     }
 
     private static Intake instance;
-    private final HallEffect hallEffect = new HallEffect(
-        "Intake/HallEffect",
-        new HallEffectConfig(HALL_EFFECT_CHANNEL)
-        .withInverted(HALL_INVERTED)
-        .withDebounce(HALL_DEBOUNCE_s, HALL_DEBOUNCE_TYPE));
         
     private final Intake2D measured2d = new Intake2D("Intake/Measured2D", new Color8Bit(150, 0, 100));
     private final Intake2D setpoint2d = new Intake2D("Intake/Set2D", new Color8Bit(150, 100, 0));
@@ -55,7 +49,6 @@ public class Intake extends SubsystemBase<Intake.Command> {
     private double targetAngle_rad = 0;
     private double targetVolts = 0;
     private boolean zeroed = false;
-    private boolean hallDetected = false;
     private int rollerStallCounts = 0;
 
 
@@ -78,7 +71,7 @@ public class Intake extends SubsystemBase<Intake.Command> {
                 .withSupplyCurrentLimit(ARM_SUPPLY_CURRENT_LIMIT_A)
                 .withSensorToMechanismRatio(ARM_RADIANS_TO_ROTATIONS)
                 .withMotionMagic(ARM_MM_CRUISE_VELOCITY, ARM_MM_ACCELERATION, ARM_MM_JERK)
-                .withSim(ARM_SIM_MOTOR, ARM_GEAR_RATIO, ARM_SIM_MOI);
+                .withSim(ARM_SIM_MOTOR, ARM_RADIANS_TO_ROTATIONS, ARM_SIM_MOI);
 
         MotorConfig rollerConfig = new MotorConfig(ROLLER_MOTOR_ID).withCanbus(ROLLER_CANBUS)
                 .withInverted(ROLLER_INVERTED)
@@ -97,8 +90,6 @@ public class Intake extends SubsystemBase<Intake.Command> {
     protected void inputPeriodic(){
         rollerMotor.readInputs();
         intakeMotor.readInputs();
-        hallEffect.readInputs();
-        hallDetected = hallEffect.get();
     }
 
     @Override
@@ -120,7 +111,7 @@ public class Intake extends SubsystemBase<Intake.Command> {
                 switch ((Homing) getSubstate()) {
                     case SEEKING:
                         intakeMotor.setVoltage(HOMING_VOLTS);
-                        if (Robot.isSimulation() || hallDetected) {
+                        if (Robot.isSimulation()) {
                             intakeMotor.zeroPosition(MIN_ANGLE_DEG);
                             zeroed = true;
                             setSubstate(Homing.SETTLED);   
@@ -158,7 +149,6 @@ public class Intake extends SubsystemBase<Intake.Command> {
                 }
 
                 switch ((Collecting) getSubstate()) {
-
                     case INTAKING:
                         rollerMotor.setVoltage(INTAKE_VOLTS);
                         if (rollerMotor.getVoltage() > 0 && rollerMotor.getCurrent() > ROLLER_CURRENT_THRESHOLD) {
@@ -193,10 +183,10 @@ public class Intake extends SubsystemBase<Intake.Command> {
         measured2d.periodic();
         setpoint2d.periodic();
 
-        Logger.recordOutput("Arm/Angle_rad", getAngle());
-        Logger.recordOutput("Arm/Velocity_rps", intakeMotor.getVelocity());
-        Logger.recordOutput("Arm/TargetAngle_rad", targetAngle_rad);
-        Logger.recordOutput("Arm/Zeroed", isZeroed());
+        Logger.recordOutput("Intake/Angle_rad", getAngle());
+        Logger.recordOutput("Intake/Velocity_rps", intakeMotor.getVelocity());
+        Logger.recordOutput("Intake/TargetAngle_rad", targetAngle_rad);
+        Logger.recordOutput("Intake/Zeroed", isZeroed());
     }
 
     public void idle() {
