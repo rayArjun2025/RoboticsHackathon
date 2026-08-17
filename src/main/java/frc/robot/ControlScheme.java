@@ -4,10 +4,11 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.PathingMode;
 import frc.robot.subsystems.drive.PathingOverride;
 import frc.robot.subsystems.drive.SwerveInput;
+import frc.robot.superstructure.SS;
+import frc.robot.superstructure.SS.Flag;
 import frc.robot.util.Util;
 
-
-/*public class ControlScheme {
+public class ControlScheme {
 
     private final SS ss;
     private final Drive drive;
@@ -60,4 +61,4 @@ import frc.robot.util.Util;
 
 
     }
-}*/
+}

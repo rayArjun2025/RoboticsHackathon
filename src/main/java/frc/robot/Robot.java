@@ -19,16 +19,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Threads;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
-<<<<<<< HEAD
-
-=======
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.hand.Hand;
 import frc.robot.subsystems.intake.Intake;
->>>>>>> main
 import frc.robot.subsystems.obstacles.ObstacleAvoidance;
 import frc.robot.subsystems.tracking.Tracking;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.superstructure.SS;
 
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -45,19 +42,16 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 public class Robot extends LoggedRobot {
 
     private Drive drive;
-   // private Elevator elevator;
+    private Elevator elevator;
     private Vision vision;
     private Tracking tracking;
     private ObstacleAvoidance obstacles;
-<<<<<<< HEAD
-   // private SS superstructure;
-    //private ControlScheme controls;
-=======
+
     private SS superstructure;
     private ControlScheme controls;
     private Intake intake;
     private Hand hand;
->>>>>>> main
+
 
 
     @Override
@@ -128,9 +122,9 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
         Threads.setCurrentThreadPriority(true, 99);
 
-        //controls.update();
-        //superstructure.periodic();
-        //elevator.periodic();
+        controls.update();
+        superstructure.periodic();
+        elevator.periodic();
         obstacles.periodic();
         tracking.periodic();
         drive.periodic();
@@ -162,7 +156,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopInit() {
-        //controls.init();
+        controls.init();
     }
 
     @Override
@@ -187,21 +181,18 @@ public class Robot extends LoggedRobot {
 
     
     public void instantiateSubsystems() {
-        //elevator = Elevator.getInstance();
+        elevator = Elevator.getInstance();
         obstacles = ObstacleAvoidance.getInstance();
         drive = Drive.getInstance();
         vision = Vision.getInstance();
         tracking = Tracking.getInstance();
-<<<<<<< HEAD
-        //superstructure = SS.getInstance();
-        //controls = new ControlScheme(superstructure, drive);
-=======
+
         intake = Intake.getInstance();
         hand = Hand.getInstance();
         superstructure = SS.getInstance();
         controls = new ControlScheme(superstructure, drive);
     
->>>>>>> main
+
     }
 
 }
