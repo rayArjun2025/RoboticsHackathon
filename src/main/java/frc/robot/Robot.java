@@ -46,10 +46,12 @@ public class Robot extends LoggedRobot {
     private Vision vision;
     private Tracking tracking;
     private ObstacleAvoidance obstacles;
+
     private SS superstructure;
     private ControlScheme controls;
     private Intake intake;
     private Hand hand;
+
 
 
     @Override
@@ -184,11 +186,13 @@ public class Robot extends LoggedRobot {
         drive = Drive.getInstance();
         vision = Vision.getInstance();
         tracking = Tracking.getInstance();
+
         intake = Intake.getInstance();
         hand = Hand.getInstance();
         superstructure = SS.getInstance();
         controls = new ControlScheme(superstructure, drive);
     
+
     }
 
 }

@@ -8,7 +8,6 @@ import frc.robot.superstructure.SS;
 import frc.robot.superstructure.SS.Flag;
 import frc.robot.util.Util;
 
-
 public class ControlScheme {
 
     private final SS ss;

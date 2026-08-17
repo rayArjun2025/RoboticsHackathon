@@ -45,10 +45,10 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
             new HallEffectConfig(HALL_EFFECT_CHANNEL)
                     .withInverted(HALL_INVERTED)
                     .withDebounce(HALL_DEBOUNCE_s, HALL_DEBOUNCE_TYPE));
-    private final Elevator2d elevatorMeasured2d = new Elevator2d("Elevator/Measured2d", new Color8Bit(200, 0, 0));
-    private final Elevator2d elevatorSet2D = new Elevator2d("Elevator/Setpoint2d", new Color8Bit(100, 100, 100));
-    private final Elevator2d armMeasured2d = new Elevator2d("Elevator/Measured2d", new Color8Bit(150, 0, 50));
-    private final Elevator2d armSetpoint2d = new Elevator2d("Elevator/Setpoint2d", new Color8Bit(0, 150, 50));
+    private final Elevator2D elevatorMeasured2d = new Elevator2D("Elevator/Measured2d", new Color8Bit(200, 0, 0));
+    private final Elevator2D elevatorSet2D = new Elevator2D("Elevator/Setpoint2d", new Color8Bit(100, 100, 100));
+    private final Elevator2D armMeasured2d = new Elevator2D("Elevator/Measured2d", new Color8Bit(150, 0, 50));
+    private final Elevator2D armSetpoint2d = new Elevator2D("Elevator/Setpoint2d", new Color8Bit(0, 150, 50));
 
     private double targetHeight_m = MIN_HEIGHT_m;
     private double targetAngle_rad = Math.toRadians(ARM_MAX_ANGLE_DEG);
