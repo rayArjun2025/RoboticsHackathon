@@ -131,7 +131,8 @@ public class Hand extends SubsystemBase<Hand.Command> {
                 break;
 
             case MANUAL:
-                handMotor.setVoltage(targetVolts);
+                if(!hallDetected)
+                    handMotor.setVoltage(targetVolts);
                 break;
         
         }

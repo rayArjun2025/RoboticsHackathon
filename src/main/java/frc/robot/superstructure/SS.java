@@ -1,9 +1,10 @@
 package frc.robot.superstructure;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.subsystems.hand.HandConstants;
 import frc.robot.subsystems.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.elevator.Elevator;
+
 
 import frc.robot.subsystems.hand.Hand;
 
@@ -55,7 +56,7 @@ public class SS extends SubsystemBase<SS.Command> {
 
     private static final double MANUAL_VOLTS = 2.0;
     
-    private static final double SETTLE_TIME_s = 0.2;
+    private static final double SETTLE_TIME_s = 0.8;
 
     private static SS instance;
 
