@@ -56,7 +56,7 @@ public class SS extends SubsystemBase<SS.Command> {
 
     private static final double MANUAL_VOLTS = 2.0;
     
-    private static final double SETTLE_TIME_s = 0.2;
+    private static final double SETTLE_TIME_s = 0.8;
 
     private static SS instance;
 

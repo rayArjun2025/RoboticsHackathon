@@ -158,8 +158,10 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
                 break;
 
             case MANUAL:
-                heightMotor.setVoltage(voltsTarget);
-                angleMotor.setVoltage(voltsTarget);
+                if(!hallDetected){
+                    heightMotor.setVoltage(voltsTarget);
+                    angleMotor.setVoltage(voltsTarget);
+                }
                 break;
         }
     }
