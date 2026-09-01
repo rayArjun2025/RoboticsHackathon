@@ -168,10 +168,10 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
 
     @Override
     protected void outputPeriodic() {
-        elevatorMeasured2d.setHeight(getHeight());
-        elevatorMeasured2d.setAngle(getAngle());
-        elevatorSet2D.setHeight(getTargetHeight());
-        elevatorSet2D.setAngle(getTargetAngle());
+        elevatorMeasured2d.setHeight(getHeight() * 10);
+        elevatorMeasured2d.setAngle(Math.toDegrees(getAngle()));
+        elevatorSet2D.setHeight(getTargetHeight() * 10);
+        elevatorSet2D.setAngle(Math.toDegrees(getTargetAngle()));
 
         elevatorMeasured2d.periodic();
         elevatorSet2D.periodic();
@@ -184,9 +184,9 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
         Logger.recordOutput("Elevator/TargetHeight_m", targetHeight_m);
         Logger.recordOutput("Elevator/Zeroed", isZeroed());
 
-        Logger.recordOutput("Elevator/Angle_rad", Math.toDegrees(getAngle()));
+        Logger.recordOutput("Elevator/Angle_rad", getAngle());
         Logger.recordOutput("Elevator/Velocity_rps", angleMotor.getVelocity());
-        Logger.recordOutput("Elevator/TargetAngle_rad", Math.toDegrees(targetAngle_rad));
+        Logger.recordOutput("Elevator/TargetAngle_rad", targetAngle_rad);
     }
 
 
@@ -218,7 +218,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     }
 
     public double getHeight() {
-        return heightMotor.getPosition() * 10;
+        return heightMotor.getPosition();
     }
 
     public double getTargetHeight() {
@@ -226,11 +226,11 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     }
 
      public double getAngle() {
-        return Math.toDegrees(angleMotor.getPosition());
+        return angleMotor.getPosition();
     }
 
     public double getTargetAngle() {
-        return Math.toDegrees(targetAngle_rad);
+        return targetAngle_rad;
     }
 
 

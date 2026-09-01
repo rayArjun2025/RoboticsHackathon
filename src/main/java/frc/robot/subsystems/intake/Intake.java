@@ -178,8 +178,8 @@ public class Intake extends SubsystemBase<Intake.Command> {
 
     @Override 
     protected void outputPeriodic(){
-        measured2d.setAngle(getAngle());
-        setpoint2d.setAngle(getTargetAngle());
+        measured2d.setAngle(Math.toDegrees(getAngle()));
+        setpoint2d.setAngle(Math.toDegrees(getTargetAngle()));
         measured2d.periodic();
         setpoint2d.periodic();
 
@@ -210,11 +210,11 @@ public class Intake extends SubsystemBase<Intake.Command> {
     }
 
     public double getAngle() {
-        return Math.toDegrees(intakeMotor.getPosition());
+        return intakeMotor.getPosition();
     }
 
     public double getTargetAngle() {
-        return Math.toDegrees(targetAngle_rad);
+        return targetAngle_rad;
     }
 
 

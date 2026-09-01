@@ -25,7 +25,7 @@ public class Elevator2d {
     this.name = name;
     mech = new LoggedMechanism2d(13, 20);
     root = mech.getRoot("Root", 2, 0.5);
-    elev = root.append(new LoggedMechanismLigament2d("elevator", 33, 0, 15, color));
+    elev = root.append(new LoggedMechanismLigament2d("elevator", 33, 90, 15, color));
   }
 
   public void setHeight(double height) {

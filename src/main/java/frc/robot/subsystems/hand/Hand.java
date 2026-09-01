@@ -98,7 +98,7 @@ public class Hand extends SubsystemBase<Hand.Command> {
                 switch ((Homing) getSubstate()) {
                     case SEEKING:
                         handMotor.setVoltage(HOMING_VOLTS);
-                        if (Robot.isSimulation() || hallDetected) {
+                        if (Robot.isSimulation() || !hallDetected) {
                             handMotor.zeroPosition(OPEN_ANGLE_RAD);
                             zeroed = true;
                             setSubstate(Homing.SETTLED);   
