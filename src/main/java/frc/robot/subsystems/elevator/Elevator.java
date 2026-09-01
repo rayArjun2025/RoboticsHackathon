@@ -45,10 +45,10 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
             new HallEffectConfig(HALL_EFFECT_CHANNEL)
                     .withInverted(HALL_INVERTED)
                     .withDebounce(HALL_DEBOUNCE_s, HALL_DEBOUNCE_TYPE));
+
     private final Elevator2d elevatorMeasured2d = new Elevator2d("Elevator/Measured2d", new Color8Bit(200, 0, 0));
     private final Elevator2d elevatorSet2D = new Elevator2d("Elevator/Setpoint2d", new Color8Bit(100, 100, 100));
-    private final Elevator2d armMeasured2d = new Elevator2d("Elevator/Measured2d", new Color8Bit(150, 0, 50));
-    private final Elevator2d armSetpoint2d = new Elevator2d("Elevator/Setpoint2d", new Color8Bit(0, 150, 50));
+    
 
     private double targetHeight_m = MIN_HEIGHT_m;
     private double targetAngle_rad = Math.toRadians(ARM_MAX_ANGLE_DEG);
@@ -122,7 +122,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
                     case SEEKING:
                         heightMotor.setVoltage(HOMING_VOLTS);
                         angleMotor.setVoltage(ARM_HOMING_VOLTS);
-                        if (Robot.isSimulation() || hallDetected) {
+                        if (Robot.isSimulation() || !hallDetected) {
                             heightMotor.zeroPosition(MIN_HEIGHT_m);
                             angleMotor.zeroPosition(Math.toRadians(ARM_HOMING_DEG));
                             zeroed = true;
@@ -169,14 +169,15 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     @Override
     protected void outputPeriodic() {
         elevatorMeasured2d.setHeight(getHeight());
-        elevatorSet2D.setHeight(targetHeight_m);
+        elevatorMeasured2d.setAngle(getAngle());
+        elevatorSet2D.setHeight(getTargetHeight());
+        elevatorSet2D.setAngle(getTargetAngle());
+
         elevatorMeasured2d.periodic();
         elevatorSet2D.periodic();
 
-        armMeasured2d.setAngle(getAngle());
-        armSetpoint2d.setAngle(targetAngle_rad);
-        armMeasured2d.periodic();
-        armSetpoint2d.periodic();
+        
+        
 
         Logger.recordOutput("Elevator/Height_m", getHeight());
         Logger.recordOutput("Elevator/Velocity_mps", heightMotor.getVelocity());
@@ -217,19 +218,19 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     }
 
     public double getHeight() {
-        return heightMotor.getPosition();
+        return heightMotor.getPosition() * 10;
     }
 
     public double getTargetHeight() {
-        return targetHeight_m;
+        return targetHeight_m * 10;
     }
 
      public double getAngle() {
-        return angleMotor.getPosition();
+        return Math.toDegrees(angleMotor.getPosition());
     }
 
     public double getTargetAngle() {
-        return targetAngle_rad;
+        return Math.toDegrees(targetAngle_rad);
     }
 
 

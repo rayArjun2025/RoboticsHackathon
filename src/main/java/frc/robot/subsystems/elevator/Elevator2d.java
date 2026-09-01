@@ -23,17 +23,17 @@ public class Elevator2d {
 
   public Elevator2d(String name, Color8Bit color) {
     this.name = name;
-    mech = new LoggedMechanism2d(4, 15);
+    mech = new LoggedMechanism2d(13, 20);
     root = mech.getRoot("Root", 2, 0.5);
-    elev = root.append(new LoggedMechanismLigament2d("elevator", 10, 90, 10, color));
+    elev = root.append(new LoggedMechanismLigament2d("elevator", 33, 0, 15, color));
   }
 
   public void setHeight(double height) {
     elev.setLength(height);
   }
 
-  public void setAngle(double angle_rad) {
-    elev.setAngle(angle_rad);
+  public void setAngle(double angle_deg) {
+    elev.setAngle(angle_deg);
   }
 
   public void periodic() {
