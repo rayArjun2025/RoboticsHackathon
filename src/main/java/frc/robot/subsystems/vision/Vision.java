@@ -36,7 +36,7 @@ public class Vision extends SubsystemBase<Vision.Command> {
 
     private final List<Limelight> limelights = new ArrayList<>();
     private final AprilTagFieldLayout tagLayout =
-            AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+            AprilTagFieldLayout.loadField(AprilTagFields.k2023ChargedUp);
     private final Drive drive;
     private final PoseKalmanFilter filter = new PoseKalmanFilter(
             VisionConstants.PROCESS_STD_TRANSLATION_m, VisionConstants.PROCESS_STD_ROTATION_rad);

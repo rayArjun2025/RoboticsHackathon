@@ -70,7 +70,7 @@ public class ObstacleAvoidance extends SubsystemBase<ObstacleAvoidance.Command> 
   // Build the field boundary rectangle so the robot always avoids the perimeter walls.
   private void addFieldPerimeter() {
     // Load the season's tag map just to read the field dimensions from it.
-    AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+    AprilTagFieldLayout layout = AprilTagFieldLayout.loadField(AprilTagFields.k2023ChargedUp);
     double length_m = layout.getFieldLength();
     double width_m = layout.getFieldWidth();
     // Four corners, counter-clockwise, forming the field rectangle.

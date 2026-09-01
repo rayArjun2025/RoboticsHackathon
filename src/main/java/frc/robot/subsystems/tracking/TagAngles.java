@@ -25,7 +25,7 @@ public final class TagAngles {
     private TagAngles() {}
 
     private static final AprilTagFieldLayout LAYOUT =
-            AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+            AprilTagFieldLayout.loadField(AprilTagFields.k2023ChargedUp);
 
     /**
      * Manual per-tag heading overrides (tag id -> field-relative degrees). Empty by default; add an

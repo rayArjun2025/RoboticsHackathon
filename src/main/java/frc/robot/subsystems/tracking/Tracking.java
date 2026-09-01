@@ -44,7 +44,7 @@ public class Tracking extends SubsystemBase<TrackingStates> {
   private final Drive drive;
   // The field's tag positions, loaded once. Used to look up where a tag is on the field.
   private final AprilTagFieldLayout tagLayout =
-      AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+      AprilTagFieldLayout.loadField(AprilTagFields.k2023ChargedUp);
 
   private boolean enabled = true;
 
