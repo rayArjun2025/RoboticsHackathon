@@ -222,7 +222,7 @@ public class Elevator extends SubsystemBase<Elevator.Command> {
     }
 
     public double getTargetHeight() {
-        return targetHeight_m * 10;
+        return targetHeight_m;
     }
 
      public double getAngle() {
