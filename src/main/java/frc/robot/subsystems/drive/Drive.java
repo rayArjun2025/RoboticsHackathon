@@ -25,7 +25,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -42,7 +42,7 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
+
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.devices.swervemodule.SwerveModule;
@@ -406,12 +406,19 @@ public class Drive extends StateMachineSubsystemBase<PathingMode> {
         }
 
         // Log setpoint states
+        Pose2d pose = getPose();
         Logger.recordOutput("Drive/Modules/Mode", mode);
         Logger.recordOutput("Drive/Modules/Setpoints", setpointStates);
         Logger.recordOutput("Drive/Modules/SetpointsOptimized", optimizedSetpointStates);
         Logger.recordOutput("Drive/PathingOverride", override.name());
         Logger.recordOutput("Drive/TargetPose", targetPose);
-        Logger.recordOutput("Drive/GyroAngle", getRotation().getDegrees());
+
+        // Logging the robot's pose for autos I'm broke :(
+        Logger.recordOutput("Drive/Pose", pose);
+        Logger.recordOutput("Drive/X_m", pose.getX());
+        Logger.recordOutput("Drive/Y_m", pose.getY());
+        Logger.recordOutput("Drive/HeadingDeg", pose.getRotation().getDegrees());
+
     }
 
     public boolean velUnder(double mag) {
